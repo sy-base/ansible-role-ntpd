@@ -1,0 +1,11 @@
+---
+- name: Stop and disable NTPd service
+  service:
+    name: "{{ ntpd_service }}"
+    state: stopped
+    enabled: no
+
+- name: Remove NTP package
+  yum:
+    name: ntp
+    state: absent

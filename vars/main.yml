@@ -1,0 +1,3 @@
+---
+ntpd_service: ntpd
+ntpd_driftfile: /var/lib/ntp/drift

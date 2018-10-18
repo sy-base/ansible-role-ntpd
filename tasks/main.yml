@@ -1,0 +1,33 @@
+---
+# tasks file for ansible-role-ntpd
+
+- name: Set Valid State Values
+  set_fact:
+    state_values:
+      - present
+      - absent
+
+- name: Check For State
+  fail:
+    msg: "State specified [{{ state }}] must be set to one of [{{ state_values|list|join(', ') }}]"
+  when: (state is not defined) or (state|lower not in state_values)
+
+- name: Host OS Info
+  debug:
+    msg: 
+      - "State: {{ state | lower }}"
+      - "OS Family: {{ ansible_os_family }}"
+      - "OS Major Version: {{ ansible_distribution_major_version}}"
+
+- name: Get OS Specific Tasks
+  set_fact: 
+    os_task_file: "{{ os_task_item }}"
+  with_first_found:
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-{{ state | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ state | lower }}.yml"
+  loop_control:
+    loop_var: os_task_item
+
+- name: Execute OS Specific Action 
+  include: "{{ os_task_file }}"
+  when: os_task_file is defined
