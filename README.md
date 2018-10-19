@@ -1,4 +1,4 @@
-sy-base.ntpd
+ntpd
 =========
 
 Simple role to manage ntpd configuration
